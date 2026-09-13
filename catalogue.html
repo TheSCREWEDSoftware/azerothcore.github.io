@@ -7,10 +7,157 @@ layout: catalogue
   <p class="mb-1">This page hosts the interactive catalogue listing modules, tools, SQL and Lua scripts.</p>
 </div>
 
+<style>
+  .catalogue-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+  }
+  .catalogue-topic-badge {
+    display: inline-block;
+    padding: 0.4em 0.9em;
+    font-size: 1rem;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .catalogue-topic-badge:hover,
+  .catalogue-topic-badge:focus {
+    background-color: #c7254e;
+    color: #fff;
+    text-decoration: none;
+  }
+</style>
+
 <div class="small text-muted mb-3">
-  Topics used by this catalogue:
-  <code>azerothcore-module</code>, <code>azerothcore-tools</code>, <code>azerothcore-lua</code>, <code>azerothcore-sql</code>
+  <span class="catalogue-status-label">Topics used by this catalogue:</span>
+  <div class="catalogue-topics">
+    <a class="catalogue-topic-badge" href="https://github.com/topics/azerothcore-module" target="_blank" rel="noopener">azerothcore-module</a>
+    <a class="catalogue-topic-badge" href="https://github.com/topics/azerothcore-tools" target="_blank" rel="noopener">azerothcore-tools</a>
+    <a class="catalogue-topic-badge" href="https://github.com/topics/azerothcore-lua" target="_blank" rel="noopener">azerothcore-lua</a>
+    <a class="catalogue-topic-badge" href="https://github.com/topics/azerothcore-sql" target="_blank" rel="noopener">azerothcore-sql</a>
+  </div>
 </div>
+
+{% if site.data.catalogue_status %}
+<style>
+  .catalogue-status {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem 1.5rem;
+    margin: 0 0 1rem;
+  }
+  @media (max-width: 700px) {
+    .catalogue-status {
+      grid-template-columns: 1fr;
+    }
+  }
+  .catalogue-status-label {
+    font-weight: 600;
+  }
+  .catalogue-status-value {
+    margin-top: 0.15em;
+  }
+  .catalogue-updated-absolute {
+    opacity: 0.75;
+    font-size: 0.92em;
+  }
+</style>
+<div class="catalogue-status small text-muted">
+  <div class="catalogue-status-item">
+    <div class="catalogue-status-label">Last Git Update:</div>
+    <div class="catalogue-status-value"><span class="catalogue-updated" data-utc="{{ site.data.catalogue_status.git_updated_at }}">{{ site.data.catalogue_status.git_updated_at | date: "%d-%m-%Y | %H:%M:%S" }} UTC</span></div>
+  </div>
+  <div class="catalogue-status-item">
+    <div class="catalogue-status-label">Last Repository Data Update:</div>
+    <div class="catalogue-status-value"><span class="catalogue-updated" data-utc="{{ site.data.catalogue_status.data_updated_at }}">{{ site.data.catalogue_status.data_updated_at | date: "%d-%m-%Y | %H:%M:%S" }} UTC</span></div>
+  </div>
+  <div class="catalogue-status-item">
+    <div class="catalogue-status-label">Next Automatic Update:</div>
+    <div class="catalogue-status-value"><span class="catalogue-updated catalogue-countdown" data-interval-minutes="30">Every 30 minutes (UTC :00 / :30)</span></div>
+  </div>
+</div>
+<script>
+(function () {
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function formatLocal(date) {
+    var tzName = '';
+    try {
+      var part = new Intl.DateTimeFormat(undefined, { timeZoneName: 'short' })
+        .formatToParts(date)
+        .find(function (p) { return p.type === 'timeZoneName'; });
+      if (part) tzName = part.value;
+    } catch (e) {}
+    var s = pad(date.getDate()) + '-' + pad(date.getMonth() + 1) + '-' + date.getFullYear() +
+      ' | ' + pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
+    return tzName ? s + ' ' + tzName : s;
+  }
+
+  function formatRelative(date) {
+    var diffSec = Math.round((date.getTime() - Date.now()) / 1000);
+    var units = [[31536000, 'year'], [2592000, 'month'], [86400, 'day'], [3600, 'hour'], [60, 'minute'], [1, 'second']];
+    var rtf = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
+    for (var i = 0; i < units.length; i++) {
+      var secs = units[i][0], unit = units[i][1];
+      if (Math.abs(diffSec) >= secs || unit === 'second') {
+        return rtf.format(Math.round(diffSec / secs), unit);
+      }
+    }
+  }
+
+  function renderInto(el, date) {
+    var relative = formatRelative(date);
+    var absolute = formatLocal(date);
+    el.textContent = '';
+    var relSpan = document.createElement('span');
+    relSpan.className = 'catalogue-updated-relative';
+    relSpan.textContent = relative;
+    var absSpan = document.createElement('span');
+    absSpan.className = 'catalogue-updated-absolute';
+    absSpan.textContent = ' (' + absolute + ')';
+    el.appendChild(relSpan);
+    el.appendChild(absSpan);
+  }
+
+  function nextCronBoundary(intervalMinutes) {
+    var ms = intervalMinutes * 60 * 1000;
+    return new Date(Math.ceil(Date.now() / ms) * ms);
+  }
+
+  function refresh() {
+    document.querySelectorAll('.catalogue-updated[data-utc]').forEach(function (el) {
+      var iso = el.getAttribute('data-utc');
+      if (!iso) return;
+      var date = new Date(iso);
+      if (isNaN(date.getTime())) return;
+      try {
+        renderInto(el, date);
+      } catch (e) {
+        // Intl.RelativeTimeFormat unsupported or another failure: keep the
+        // server-rendered UTC timestamp already in the element.
+      }
+    });
+
+    document.querySelectorAll('.catalogue-countdown').forEach(function (el) {
+      var minutes = parseInt(el.getAttribute('data-interval-minutes'), 10) || 30;
+      try {
+        renderInto(el, nextCronBoundary(minutes));
+      } catch (e) {
+        // Keep the server-rendered fallback text.
+      }
+    });
+  }
+
+  refresh();
+  setInterval(refresh, 30000);
+})();
+</script>
+{% endif %}
 
 <noscript>
   <div class="alert alert-warning">
