@@ -162,6 +162,35 @@
   color: #d90000;
 }
 
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.footer-inner p {
+  margin: 0;
+}
+
+.footer .footer-donate-btn {
+  display: inline-block;
+  padding: 0.5em 1.6em;
+  background-color: #ffc439;
+  color: #1a1a1a;
+  font-weight: 700;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.footer .footer-donate-btn:hover,
+.footer .footer-donate-btn:focus {
+  background-color: #ffb700;
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
 
 .btn-container-lg {
   padding-top: 15px;
