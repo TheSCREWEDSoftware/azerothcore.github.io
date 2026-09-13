@@ -4,3 +4,6 @@
 Gemfile.github.lock
 
 /certs
+
+_data/catalogue_status.yml
+_site
