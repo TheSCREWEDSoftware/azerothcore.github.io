@@ -19,7 +19,7 @@ on:
         default: 'true'
 
 permissions:
-  contents: read
+  contents: write
   pages: write      # to deploy to Pages
   id-token: write   # to verify the deployment originates from an appropriate source
 
@@ -102,6 +102,53 @@ jobs:
             exit 1
           fi
 
+      - name: Determine if a data commit is needed
+        id: commit-check
+        run: |
+          KEEPALIVE_DAYS=25
+
+          if git diff --quiet -- data/catalogue.json; then
+            DATA_CHANGED=false
+          else
+            DATA_CHANGED=true
+          fi
+
+          LAST_COMMIT_EPOCH=$(git log -1 --format=%ct)
+          NOW_EPOCH=$(date -u +%s)
+          DAYS_SINCE_COMMIT=$(( (NOW_EPOCH - LAST_COMMIT_EPOCH) / 86400 ))
+
+          if [ "$DATA_CHANGED" = "true" ]; then
+            echo "should-commit=true" >> $GITHUB_OUTPUT
+            echo "reason=data changed" >> $GITHUB_OUTPUT
+          elif [ "$DAYS_SINCE_COMMIT" -ge "$KEEPALIVE_DAYS" ]; then
+            echo "should-commit=true" >> $GITHUB_OUTPUT
+            echo "reason=keepalive commit, ${DAYS_SINCE_COMMIT} days since last commit" >> $GITHUB_OUTPUT
+          else
+            echo "should-commit=false" >> $GITHUB_OUTPUT
+            echo "reason=no data change, ${DAYS_SINCE_COMMIT} days since last commit" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push updated catalogue data
+        if: steps.commit-check.outputs.should-commit == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/catalogue.json
+          git commit --allow-empty -m "chore(catalogue): update repository data (${{ steps.commit-check.outputs.reason }}) [skip ci]"
+          git pull --rebase origin ${{ github.ref_name }}
+          git push origin HEAD:${{ github.ref_name }}
+
+      - name: Generate catalogue status data for the site
+        run: |
+          mkdir -p _data
+          DATA_UPDATED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          GIT_UPDATED_AT=$(git log -1 --format=%cI)
+          cat > _data/catalogue_status.yml << STATUSYAML
+          data_updated_at: "${DATA_UPDATED_AT}"
+          git_updated_at: "${GIT_UPDATED_AT}"
+          total_repositories: ${{ steps.fetch-repos.outputs.total-repos }}
+          STATUSYAML
+
       # Build and deploy the entire site via GitHub Pages so
       # the generated JSON is published without committing it.
       - name: Setup Pages
@@ -142,3 +189,4 @@ jobs:
           echo "- **Organizations:** ${{ steps.defaults.outputs.organizations }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Generated At:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
           echo "- **Published To:** ${{ steps.deployment.outputs.page_url }}data/catalogue.json" >> $GITHUB_STEP_SUMMARY
+          echo "- **Data Committed:** ${{ steps.commit-check.outputs.should-commit }} (${{ steps.commit-check.outputs.reason }})" >> $GITHUB_STEP_SUMMARY
