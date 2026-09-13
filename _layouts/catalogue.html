@@ -9,6 +9,16 @@ layout: default
   .header {
     padding-bottom: 0px;
   }
+  @media (min-width: 1200px) {
+    .catalogue-wide-container.container {
+      width: 85% !important;
+      max-width: 1800px !important;
+    }
+    .catalogue-wide-container .container {
+      width: 100% !important;
+      max-width: none !important;
+    }
+  }
 </style>
 
 <link
@@ -46,7 +56,7 @@ layout: default
   <!-- /.container -->
 </div>
 
-<div id="content" class="container">
+<div id="content" class="container catalogue-wide-container">
   {{content}}
   <app-root></app-root>
   <noscript>
