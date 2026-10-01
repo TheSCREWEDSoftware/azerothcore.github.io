@@ -12,7 +12,7 @@ on:
       topics:
         description: 'Topics mapping (JSON object)'
         required: false
-        default: '{"azerothcore": ["azerothcore-module", "azerothcore-tools", "azerothcore-lua", "azerothcore-sql"]}'
+        default: '{"azerothcore": ["azerothcore-module", "azerothcore-tools", "azerothcore-lua", "azerothcore-sql", "azerothcore-dbc"]}'
       global-search:
         description: 'Search globally across GitHub (true) or restrict to organizations (false)'
         required: false
@@ -51,7 +51,7 @@ jobs:
           fi
           
           if [ -z "$TOPICS" ]; then
-            TOPICS='{"azerothcore": ["azerothcore-module", "azerothcore-tools", "azerothcore-lua", "azerothcore-sql"]}'
+            TOPICS='{"azerothcore": ["azerothcore-module", "azerothcore-tools", "azerothcore-lua", "azerothcore-sql", "azerothcore-dbc"]}'
           fi
           
           if [ -z "$GLOBAL_SEARCH" ]; then

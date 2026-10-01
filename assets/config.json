@@ -5,7 +5,10 @@
   "preGeneratedFileUrl": "/data/catalogue.json",
   "globalSearch": true,
   "tabs": {
-    "All Modules": {
+    "All": {
+      "path": "/all"
+    },
+    "Modules": {
       "topic": "azerothcore-module",
       "org": "azerothcore",
       "path": "/module"
@@ -15,7 +18,7 @@
       "org": "azerothcore",
       "path": "/tools"
     },
-    "Lua scripts": {
+    "Lua/Eluna/ALE Scripts": {
       "topic": "azerothcore-lua",
       "org": "azerothcore",
       "path": "/lua"
@@ -24,6 +27,11 @@
       "topic": "azerothcore-sql",
       "org": "azerothcore",
       "path": "/sql"
+    },
+    "DBC": {
+      "topic": "azerothcore-dbc",
+      "org": "azerothcore",
+      "path": "/dbc"
     }
   }
 }

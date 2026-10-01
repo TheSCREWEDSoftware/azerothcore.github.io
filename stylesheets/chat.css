@@ -1,8 +1,18 @@
 .chat_box{
 	position:fixed;
 	right:20px;
+	/* Flush with the bottom edge, not lifted off it - the rounded-top/
+	   square-bottom shape (border-radius: 5px 5px 0 0) is meant to look
+	   docked to the edge, like a browser-style chat tab; lifting it up
+	   left a gap under the square bottom corners that read as a floating
+	   mistake rather than an anchored widget. */
 	bottom:0px;
-	width:350px;
+	/* Auto instead of a fixed 350px: a fixed-position block shrinks to fit
+	   its content, so the collapsed head is a snug pill sized to its own
+	   text, and it only grows to fit the 350px-wide iframe once expanded. */
+	width:auto;
+	max-width:350px;
+	z-index:1000;
 }
 .chat_body{
 	height:505px;
@@ -12,10 +22,11 @@
 .chat_head,.msg_head{
 	background:#738BD7;
 	color:white;
-	padding:15px;
+	padding:10px 18px;
 	font-weight:bold;
 	cursor:pointer;
 	border-radius:5px 5px 0px 0px;
+	white-space:nowrap;
 }
 
 .msg_box{

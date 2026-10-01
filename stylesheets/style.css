@@ -158,8 +158,11 @@
   font-size: 0.9em;
 }
 
+/* Brighter than the site's normal link red: the footer's background is a
+   near-black maroon in BOTH themes, and the plain #d90000 link red read as
+   low-contrast/hard-to-read against it. */
 .footer a {
-  color: #d90000;
+  color: #ff6b5b;
 }
 
 .footer-inner {

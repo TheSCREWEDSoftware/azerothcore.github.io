@@ -12,6 +12,19 @@
     <meta name="description" content="AzerothCore, the open source MMORPG server application">
     <meta name="author" content="ShinDarth">
 
+    <!-- Tells the browser this page fully supports both color schemes and
+         paints its own light/dark backgrounds, so Chrome/Chromium's
+         automatic "force dark" page-darkening (triggered when the OS/browser
+         prefers dark) doesn't repaint the page with its own guessed dark
+         palette on top of - or instead of - our actual light theme. Kept in
+         sync with the current theme via the `color-scheme` CSS property on
+         :root / [data-theme='dark'] in theme.css. -->
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Applied as early as possible (before any stylesheet finishes loading)
+         so the page never flashes light mode before switching to dark. -->
+    <script src="{{ '/javascripts/theme-toggle.js' | relative_url }}"></script>
+
     <link rel="apple-touch-icon" sizes="180x180" href="{{ '/images/favicon/apple-touch-icon.png' | relative_url }}">
     <link rel="icon" type="image/png" href="{{ '/images/favicon/favicon-32x32.png' | relative_url }}" sizes="32x32">
     <link rel="icon" type="image/png" href="{{ '/images/favicon/favicon-16x16.png' | relative_url }}" sizes="16x16">
@@ -32,6 +45,7 @@
 
     <link href="{{ '/stylesheets/style.css' | relative_url }}" rel="stylesheet">
     <link href="{{ '/stylesheets/chat.css' | relative_url }}" rel="stylesheet">
+    <link href="{{ '/stylesheets/theme.css' | relative_url }}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

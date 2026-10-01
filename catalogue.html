@@ -4,7 +4,7 @@ layout: catalogue
 
 <div class="alert alert-info mt-3">
   <h4 class="mb-2">AzerothCore Catalogue</h4>
-  <p class="mb-1">This page hosts the interactive catalogue listing modules, tools, SQL and Lua scripts.</p>
+  <p class="mb-1">This page hosts the interactive catalogue listing modules, tools, SQL, DBC, Lua/Eluna/ALE scripts, updaters, websites and Docker setups.</p>
 </div>
 
 <style>
@@ -19,29 +19,131 @@ layout: catalogue
     padding: 0.4em 0.9em;
     font-size: 1rem;
     font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-    color: #c7254e;
-    background-color: #f9f2f4;
+    /* Matches the site's own link blue (e.g. the "back to Catalogue" link)
+       instead of an unrelated pink, so topic pills read as part of the same
+       visual language as every other link on the page. */
+    color: #007bff;
+    background-color: #e7f3ff;
     border-radius: 999px;
     text-decoration: none;
     transition: background-color 0.15s ease, color 0.15s ease;
   }
   .catalogue-topic-badge:hover,
   .catalogue-topic-badge:focus {
-    background-color: #c7254e;
+    background-color: #007bff;
     color: #fff;
     text-decoration: none;
+  }
+  .catalogue-optional-topics summary {
+    cursor: pointer;
+    width: fit-content;
+  }
+  .catalogue-topic-count {
+    opacity: 0.75;
+    font-size: 0.85em;
   }
 </style>
 
 <div class="small text-muted mb-3">
-  <span class="catalogue-status-label">Topics used by this catalogue:</span>
-  <div class="catalogue-topics">
-    <a class="catalogue-topic-badge" href="https://github.com/topics/azerothcore-module" target="_blank" rel="noopener">azerothcore-module</a>
-    <a class="catalogue-topic-badge" href="https://github.com/topics/azerothcore-tools" target="_blank" rel="noopener">azerothcore-tools</a>
-    <a class="catalogue-topic-badge" href="https://github.com/topics/azerothcore-lua" target="_blank" rel="noopener">azerothcore-lua</a>
-    <a class="catalogue-topic-badge" href="https://github.com/topics/azerothcore-sql" target="_blank" rel="noopener">azerothcore-sql</a>
+  <span class="catalogue-status-label">Mandatory topics: <span class="catalogue-group-total" data-group="mandatory"></span></span>
+  <div class="catalogue-topics" id="catalogue-mandatory-topics">
+    <a class="catalogue-topic-badge" data-topic="azerothcore-module" href="https://github.com/topics/azerothcore-module" target="_blank" rel="noopener">azerothcore-module<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-tools" href="https://github.com/topics/azerothcore-tools" target="_blank" rel="noopener">azerothcore-tools<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-lua" href="https://github.com/topics/azerothcore-lua" target="_blank" rel="noopener">azerothcore-lua<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-sql" href="https://github.com/topics/azerothcore-sql" target="_blank" rel="noopener">azerothcore-sql<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-dbc" href="https://github.com/topics/azerothcore-dbc" target="_blank" rel="noopener">azerothcore-dbc<span class="catalogue-topic-count"></span></a>
   </div>
+
+  <details class="catalogue-optional-topics mt-3">
+    <summary class="catalogue-status-label">Optional topics <span class="catalogue-group-total" data-group="optional"></span></summary>
+    <div class="catalogue-topics mt-2" id="catalogue-optional-topics-list">
+    <a class="catalogue-topic-badge" data-topic="azerothcore-updater" href="https://github.com/topics/azerothcore-updater" target="_blank" rel="noopener">azerothcore-updater<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-website" href="https://github.com/topics/azerothcore-website" target="_blank" rel="noopener">azerothcore-website<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-docker" href="https://github.com/topics/azerothcore-docker" target="_blank" rel="noopener">azerothcore-docker<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-modding" href="https://github.com/topics/azerothcore-modding" target="_blank" rel="noopener">azerothcore-modding<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-retroport" href="https://github.com/topics/azerothcore-retroport" target="_blank" rel="noopener">azerothcore-retroport<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-vanilla" href="https://github.com/topics/azerothcore-vanilla" target="_blank" rel="noopener">azerothcore-vanilla<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-tbc" href="https://github.com/topics/azerothcore-tbc" target="_blank" rel="noopener">azerothcore-tbc<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-wotlk" href="https://github.com/topics/azerothcore-wotlk" target="_blank" rel="noopener">azerothcore-wotlk<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-cata" href="https://github.com/topics/azerothcore-cata" target="_blank" rel="noopener">azerothcore-cata<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-mop" href="https://github.com/topics/azerothcore-mop" target="_blank" rel="noopener">azerothcore-mop<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-wod" href="https://github.com/topics/azerothcore-wod" target="_blank" rel="noopener">azerothcore-wod<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-legion" href="https://github.com/topics/azerothcore-legion" target="_blank" rel="noopener">azerothcore-legion<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-bfa" href="https://github.com/topics/azerothcore-bfa" target="_blank" rel="noopener">azerothcore-bfa<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-sl" href="https://github.com/topics/azerothcore-sl" target="_blank" rel="noopener">azerothcore-sl<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-df" href="https://github.com/topics/azerothcore-df" target="_blank" rel="noopener">azerothcore-df<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-tww" href="https://github.com/topics/azerothcore-tww" target="_blank" rel="noopener">azerothcore-tww<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-mn" href="https://github.com/topics/azerothcore-mn" target="_blank" rel="noopener">azerothcore-mn<span class="catalogue-topic-count"></span></a>
+    <a class="catalogue-topic-badge" data-topic="azerothcore-tlt" href="https://github.com/topics/azerothcore-tlt" target="_blank" rel="noopener">azerothcore-tlt<span class="catalogue-topic-count"></span></a>
+    </div>
+  </details>
 </div>
+
+<script>
+(function () {
+  // Populates the "(N)" repo counts on each topic badge, and the group
+  // totals next to "Mandatory topics:" / "Optional topics", by fetching the
+  // same pre-generated repository data the catalogue app itself reads. Per
+  // repo (deduplicated across topic query buckets by id) we count from its
+  // own `topics` list - not just the topics we query for - so optional /
+  // secondary tags get an honest count too. Group totals are the number of
+  // distinct repos carrying ANY topic in that group, not a sum of the
+  // per-badge counts, so a repo tagged with more than one topic in a group
+  // isn't counted twice.
+  fetch('{{ "/data/catalogue.json" | relative_url }}', { cache: 'no-store' })
+    .then(function (res) { return res.ok ? res.json() : null; })
+    .then(function (data) {
+      if (!data || !data.organizations) { return; }
+      var repos = {};
+      Object.keys(data.organizations).forEach(function (org) {
+        var buckets = data.organizations[org];
+        Object.keys(buckets).forEach(function (bucketTopic) {
+          buckets[bucketTopic].forEach(function (repo) {
+            if (repos[repo.id]) { return; }
+            repos[repo.id] = repo.topics || [];
+          });
+        });
+      });
+
+      var counts = {};
+      Object.keys(repos).forEach(function (id) {
+        repos[id].forEach(function (topic) {
+          counts[topic] = (counts[topic] || 0) + 1;
+        });
+      });
+
+      document.querySelectorAll('.catalogue-topic-badge[data-topic]').forEach(function (badge) {
+        var span = badge.querySelector('.catalogue-topic-count');
+        if (!span) { return; }
+        var n = counts[badge.getAttribute('data-topic')] || 0;
+        span.textContent = ' (' + n + ')';
+      });
+
+      function groupTotal(containerId) {
+        var container = document.getElementById(containerId);
+        if (!container) { return 0; }
+        var topics = Array.prototype.map.call(
+          container.querySelectorAll('.catalogue-topic-badge[data-topic]'),
+          function (badge) { return badge.getAttribute('data-topic'); }
+        );
+        var total = 0;
+        Object.keys(repos).forEach(function (id) {
+          if (repos[id].some(function (t) { return topics.indexOf(t) !== -1; })) {
+            total += 1;
+          }
+        });
+        return total;
+      }
+
+      document.querySelectorAll('.catalogue-group-total').forEach(function (span) {
+        var group = span.getAttribute('data-group');
+        var containerId = group === 'mandatory' ? 'catalogue-mandatory-topics' : 'catalogue-optional-topics-list';
+        span.textContent = '(' + groupTotal(containerId) + ')';
+      });
+    })
+    .catch(function () {});
+})();
+</script>
 
 {% if site.data.catalogue_status %}
 <style>

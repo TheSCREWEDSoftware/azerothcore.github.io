@@ -1,0 +1,401 @@
+/* Shared light/dark theme variables + overrides.
+ *
+ * Applies across the whole site: the Jekyll pages AND the embedded Angular
+ * catalogue app, since both render into the same document and both read the
+ * same `data-theme` attribute that javascripts/theme-toggle.js sets on
+ * <html>. Dark-mode rules use `[data-theme="dark"]` (an attribute selector)
+ * rather than relying on load order, since Angular injects its own
+ * component-scoped <style> tags at runtime and we can't guarantee this
+ * stylesheet always loses/wins on source order alone.
+ */
+
+:root {
+  /* Paired with the <meta name="color-scheme"> tag in the head: tells the
+     browser this theme is light so Chrome's automatic page-darkening
+     doesn't repaint it dark behind our backs when the OS prefers dark. */
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-alt: #f4f5f6;
+  --text: #212529;
+  --text-muted: #6c757d;
+  --border: #dee2e6;
+  --card-bg: #ffffff;
+  --link: #d90000;
+  --link-hover: #ff6b5b;
+  --navbar-collapse-bg: #270c0c;
+  --badge-bg: #f9f2f4;
+  --badge-text: #c7254e;
+  --code-bg: #f5f2f0;
+  --toggle-bg: rgba(20, 20, 20, 0.75);
+  --toggle-icon: #ffe9a8;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #101214;
+  --bg-alt: #1a1d21;
+  --text: #e7e6e4;
+  --text-muted: #a3a7ab;
+  --border: #454b52;
+  --card-bg: #262b31;
+  --link: #ff8a75;
+  --link-hover: #ffab9b;
+  --navbar-collapse-bg: #1b0708;
+  --badge-bg: #3a2027;
+  --badge-text: #ff9db3;
+  --code-bg: #24282c;
+  /* Near-solid white so the toggle button reads clearly against the dark
+     page - the old 15%-opacity white was barely a shade different from the
+     background it sits on, making the button hard to spot. */
+  --toggle-bg: rgba(255, 255, 255, 0.92);
+  --toggle-icon: #ffe9a8;
+}
+
+body {
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+/* :not(.btn) so Bootstrap buttons rendered as <a class="btn ..."> (e.g. the
+   green Download button) keep their own button colors in dark mode instead of
+   being overridden to the plain-link color. */
+[data-theme='dark'] a:not(.btn):not(.footer-donate-btn) {
+  color: var(--link);
+}
+
+/* Icon + gap before link text shouldn't be underlined, only the text itself. */
+.back-link {
+  text-decoration: none;
+}
+.back-link span {
+  text-decoration: underline;
+}
+
+[data-theme='dark'] a:not(.btn):not(.footer-donate-btn):hover,
+[data-theme='dark'] a:not(.btn):not(.footer-donate-btn):focus {
+  color: var(--link-hover);
+}
+
+/* --- Main site (Jekyll) --- */
+
+[data-theme='dark'] .features {
+  background-color: var(--bg-alt);
+}
+[data-theme='dark'] .features hr {
+  border-color: var(--border);
+}
+
+[data-theme='dark'] #main-navbar .navbar-collapse {
+  background-color: var(--navbar-collapse-bg);
+}
+[data-theme='dark'] #main-navbar.navbar-position-scroll {
+  background-color: var(--navbar-collapse-bg);
+}
+
+[data-theme='dark'] .alert-info,
+[data-theme='dark'] .alert-primary {
+  background-color: var(--card-bg);
+  border-color: var(--border);
+  color: var(--text);
+}
+[data-theme='dark'] .alert-warning {
+  background-color: #3a3320;
+  border-color: #5c4f2a;
+  color: #ffe9a8;
+}
+
+/* Matches the brighter pink-pill look used for the how-to page's topic
+   badges, rather than the more muted dark-maroon/pink-text combo.
+   !important on color is required here: these are <a> tags, so the
+   generic dark-mode link-color rule (also !important) would otherwise
+   win and paint the text the same salmon as the background, making it
+   unreadable. */
+[data-theme='dark'] .catalogue-topic-badge {
+  background-color: var(--badge-text) !important;
+  color: var(--bg) !important;
+}
+[data-theme='dark'] .catalogue-topic-badge:hover,
+[data-theme='dark'] .catalogue-topic-badge:focus {
+  background-color: var(--link-hover) !important;
+  color: var(--bg) !important;
+}
+
+[data-theme='dark'] .text-muted {
+  color: var(--text-muted) !important;
+}
+
+[data-theme='dark'] .showcase-box {
+  background-color: var(--card-bg);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+[data-theme='dark'] .dropdown-menu {
+  background-color: var(--card-bg) !important;
+  color: var(--text);
+}
+
+/* --- Theme toggle button (injected by theme-toggle.js on every page) --- */
+
+.theme-toggle-btn {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--toggle-bg);
+  color: var(--toggle-icon);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+.theme-toggle-btn:hover,
+.theme-toggle-btn:focus {
+  transform: scale(1.06);
+  outline: none;
+}
+
+/* --- Catalogue app (Angular), skinned from outside its component styles --- */
+
+[data-theme='dark'] #content.catalogue-wide-container {
+  color: var(--text);
+}
+
+[data-theme='dark'] .catalogue-row-even {
+  background-color: var(--bg) !important;
+}
+[data-theme='dark'] .catalogue-row-odd {
+  background-color: var(--bg-alt) !important;
+}
+
+/* Light mode gives each card no background/border of its own: the only
+   separation comes from the alternating row stripe (.catalogue-row-even/
+   -odd) showing through. Dark mode should match that flat look rather
+   than boxing each card individually - just theme the text color. */
+[data-theme='dark'] .catalogue-card {
+  color: var(--text) !important;
+}
+
+[data-theme='dark'] .catalogue-stat-btn {
+  background-color: var(--bg-alt) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+[data-theme='dark'] .catalogue-stat-btn:hover,
+[data-theme='dark'] .catalogue-stat-btn:focus {
+  background-color: var(--border) !important;
+}
+
+[data-theme='dark'] .catalogue-category-more {
+  background-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+[data-theme='dark'] .catalogue-extra-categories-popover {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] #about {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text);
+}
+
+[data-theme='dark'] #readme-markdown {
+  color: var(--text);
+}
+/* Site-wide inline code treatment (GitHub-style pill), same in both
+   themes via the --code-bg/--text variables: the main Jekyll pages, the
+   embedded catalogue app, and README-rendered markdown all share this.
+   Scoped to :not(pre) so fenced/Prism-highlighted code blocks, which get
+   their own syntax-highlighting theme, are left untouched. */
+:not(pre) > code {
+  background-color: var(--code-bg);
+  color: var(--text);
+  padding: 0.2em 0.4em;
+  margin: 0 0.05em;
+  border-radius: 6px;
+  font-size: 85%;
+}
+[data-theme='dark'] #readme-markdown table th,
+[data-theme='dark'] #readme-markdown table td {
+  border-color: var(--border);
+}
+[data-theme='dark'] #readme-markdown hr {
+  border-color: var(--border);
+}
+
+/* The app's own component style gives the header 8px of horizontal
+   padding (::ng-deep .mat-mdc-tab-header { padding: 0 0.5rem }), which
+   leaves a sliver of the header's own background between the header edge
+   and the first/last tab. It's a structural padding issue, not a coloring
+   one, so it exists in both themes - it just reads as a stray gap/border in
+   dark mode, where the header/page/active-tab surfaces are more visually
+   distinct. Unscoped (not theme-specific) so both themes get flush tabs. */
+.mat-mdc-tab-header {
+  padding: 0 !important;
+}
+/* Tinted red/salmon (the dark theme's own link/accent color) using the same
+   low-alpha-over-background formula as the light theme's blue header tint
+   and the active tab's own pink tint below, so the header reads as a clear
+   band and echoes the theme's accent instead of a flat neutral gray. */
+[data-theme='dark'] .mat-mdc-tab-header {
+  background-color: rgba(255, 138, 117, 0.1) !important;
+}
+/* The pagination arrows sit next to the tab list and default to a
+   transparent background, which reads as a mismatched patch of the page's
+   darker background peeking through instead of blending with the header. */
+[data-theme='dark'] .mat-mdc-tab-header-pagination {
+  background-color: var(--bg-alt) !important;
+}
+[data-theme='dark'] .mat-mdc-tab-header-pagination-chevron {
+  border-color: var(--text-muted) !important;
+}
+[data-theme='dark'] .mdc-tab__text-label {
+  color: var(--text-muted) !important;
+}
+[data-theme='dark'] .mdc-tab--active .mdc-tab__text-label {
+  color: var(--link) !important;
+}
+/* Material's own active-tab state layer is a fixed 8%-opacity red wash
+   (tuned for a white background). On a near-black header even a brighter
+   translucent tint barely reads as filling the tab, since it's a small
+   jump from one dark shade to another. Use a solid, clearly distinct
+   surface color instead so the active pill is unmistakable. */
+[data-theme='dark'] .mdc-tab--active {
+  background-color: var(--card-bg) !important;
+}
+[data-theme='dark'] .mdc-tab--active:hover {
+  background-color: var(--border) !important;
+}
+
+[data-theme='dark'] .back-link,
+[data-theme='dark'] .back-link span {
+  color: var(--link);
+}
+
+/* --- Material paginator (catalogue "All" tab list controls) --- */
+
+/* Blends into the page background rather than standing out as a boxed
+   chip - matches how the paginator sits flush/borderless in light mode. */
+[data-theme='dark'] .mat-mdc-paginator,
+[data-theme='dark'] .mat-mdc-paginator-container {
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+[data-theme='dark'] .mat-mdc-paginator-range-label,
+[data-theme='dark'] .mat-mdc-paginator-page-size-label {
+  color: var(--text) !important;
+}
+[data-theme='dark'] .mat-mdc-paginator .mat-mdc-icon-button {
+  color: var(--text) !important;
+}
+[data-theme='dark'] .mat-mdc-paginator .mat-mdc-icon-button svg {
+  fill: var(--text) !important;
+}
+[data-theme='dark'] .mat-mdc-paginator .mat-mdc-icon-button[disabled] {
+  color: var(--text-muted) !important;
+}
+[data-theme='dark'] .mat-mdc-paginator .mat-mdc-icon-button[disabled] svg {
+  fill: var(--text-muted) !important;
+}
+
+/* --- How-to page (Bootstrap list-group + topic badges) --- */
+
+[data-theme='dark'] .list-group-item {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* Same bright pink-pill formula as .catalogue-topic-badge (the "Topics
+   used by this catalogue" badges), so the how-to page's topic badges
+   match rather than defaulting to the more muted maroon/pink-text combo. */
+[data-theme='dark'] .topic-badge {
+  background-color: var(--badge-text) !important;
+  color: var(--bg) !important;
+}
+[data-theme='dark'] .topic-badge:hover,
+[data-theme='dark'] .topic-badge:focus {
+  background-color: var(--link-hover) !important;
+  color: var(--bg) !important;
+}
+
+/* --- Generic Bootstrap components used across pages (forms, cards, tables) --- */
+
+[data-theme='dark'] .form-control,
+[data-theme='dark'] select {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+[data-theme='dark'] .form-control::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 1;
+}
+[data-theme='dark'] .input-group-text {
+  background-color: var(--bg-alt) !important;
+  border-color: var(--border) !important;
+  color: var(--text-muted) !important;
+}
+
+/* Bootstrap's default primary blue (#007bff-ish) was tuned for a white
+   page and reads as muddy/low-contrast on a near-black one. Reuse the
+   theme's own accent color instead, for both the how-to page's accordion
+   toggle buttons (.btn-link) and its outlined links (.btn-outline-primary). */
+[data-theme='dark'] .btn-link {
+  color: var(--link) !important;
+}
+[data-theme='dark'] .btn-link:hover,
+[data-theme='dark'] .btn-link:focus {
+  color: var(--link-hover) !important;
+}
+[data-theme='dark'] .btn-outline-primary {
+  color: var(--link) !important;
+  border-color: var(--link) !important;
+}
+[data-theme='dark'] .btn-outline-primary:hover,
+[data-theme='dark'] .btn-outline-primary:focus {
+  background-color: var(--link) !important;
+  border-color: var(--link) !important;
+  color: var(--bg) !important;
+}
+
+[data-theme='dark'] .card {
+  background-color: var(--card-bg);
+  border-color: var(--border);
+  color: var(--text);
+}
+[data-theme='dark'] .card-header {
+  background-color: var(--bg-alt);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+[data-theme='dark'] hr {
+  border-color: var(--border);
+}
+
+[data-theme='dark'] table {
+  color: var(--text);
+}
+[data-theme='dark'] .table td,
+[data-theme='dark'] .table th {
+  border-color: var(--border);
+}
+
+[data-theme='dark'] .badge-light {
+  background-color: var(--bg-alt);
+  color: var(--text);
+}
